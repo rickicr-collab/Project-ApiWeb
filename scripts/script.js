@@ -1,3 +1,5 @@
+/* configuração para o javascript do projeto */
+
 const formulario = document.querySelector('form');
 
 const Inome = document.querySelector('.nome');
