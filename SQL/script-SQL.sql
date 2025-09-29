@@ -11,6 +11,11 @@ telefone      varchar(15) not null);
 
 -- inserindo dados na tabela --
 insert into usuarios values(null, "Ricardo Cunha", "Ricardo10", "ricardo@email.com", "senhaRicardo", "8197400404");
+insert into usuarios values(null,"Rafael Cunha", "Rafael@email.com", "senhaRafael", "8188617005");
+insert into usuarios values(null, "ZIna Cunha", "Zina@email.com", "senhaZina", "8188973917");
 
 -- visualizando a tabela --
 select * from usuarios;
+
+-- deletando uma coluna --
+Alter table usuarios Drop column username;
