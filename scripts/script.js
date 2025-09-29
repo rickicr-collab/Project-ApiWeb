@@ -1,7 +1,7 @@
 /* configuração para o javascript do projeto */
 
 const formulario = document.querySelector('form');
-
+const botao = document.querySelector('button');
 const Inome = document.querySelector('.nome');
 const Iemail = document.querySelector('.email');
 const Isenha = document.querySelector('.senha');
@@ -10,7 +10,7 @@ const Itelefone = document.querySelector('.telefone');
 
 
 function cadastrar() {
-    fetch("http://localhost:8080/cadastrar",
+    fetch("http://localhost:8080/usuarios",
         {
             headers: {
                 'Accept': 'application/json',
