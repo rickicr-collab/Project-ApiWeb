@@ -19,3 +19,7 @@ select * from usuarios;
 
 -- deletando uma coluna --
 Alter table usuarios Drop column username;
+
+-- metodo union --
+Select nome_completo, email, senha, telefone from usuarios where id = 1
+union  select nome_completo,email,senha, telefone from usuarios where id = 2;

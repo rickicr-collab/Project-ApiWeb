@@ -29,7 +29,6 @@ public class Usuario {
     private String telefone;
 
     @Column(name = "senha", length = 100, columnDefinition = "TEXT", nullable = false)
-    
     private String senha;
 
 
