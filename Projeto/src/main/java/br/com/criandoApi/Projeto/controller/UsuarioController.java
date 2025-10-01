@@ -2,7 +2,6 @@ package br.com.criandoApi.Projeto.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,37 +13,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.criandoApi.Projeto.dao.IUsuario;
 import br.com.criandoApi.Projeto.model.Usuario;
+import br.com.criandoApi.Projeto.service.UsuarioService;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    @Autowired
-    private IUsuario dao;
+
+    private UsuarioService usuarioService;
+
+
+    public UsuarioController(UsuarioService usuarioService){
+        this.usuarioService = usuarioService;
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listaUsuarios() {
-        List<Usuario> usuarios = (List<Usuario>) dao.findAll();
-        return ResponseEntity.status(200).body(usuarios);
+        return ResponseEntity.status(200).body(usuarioService.listarUsuarios());
     }
 
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        Usuario novoUsuario = dao.save(usuario);
-        return ResponseEntity.status(201).body(novoUsuario);
+        return ResponseEntity.status(201).body(usuarioService.criarUsuario(usuario));
     }
 
     @PutMapping
     public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario) {
-        Usuario usuarioUpdate = dao.save(usuario);
-        return ResponseEntity.status(201).body(usuarioUpdate);
+        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(usuario));
     }
 
     @DeleteMapping({"/{id}"})
-    public  ResponseEntity<?> excluirUsuario(@PathVariable Integer id){
-        dao.deleteById(id);
+    public ResponseEntity<?> excluirUsuario(@PathVariable Integer id){
+        usuarioService.excluirUsuario(id);
         return ResponseEntity.status(204).build();
     }
 }
