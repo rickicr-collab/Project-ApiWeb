@@ -6,14 +6,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.criandoApi.Projeto.dto.UsuarioDto;
 import br.com.criandoApi.Projeto.model.Usuario;
 import br.com.criandoApi.Projeto.repository.IUsuario;
+import br.com.criandoApi.Projeto.security.Token;
+import br.com.criandoApi.Projeto.security.TokenUtil;
+import jakarta.validation.Valid;
 
 @Service
 public class UsuarioService {
 
     private IUsuario repository;
     private PasswordEncoder passwordEncoder;
+   
+    
 
     public UsuarioService(IUsuario repository){
         this.repository = repository;
@@ -48,6 +54,17 @@ public class UsuarioService {
     String senha = repository.findById(usuario.getId()).get().getSenha();
      boolean validar = passwordEncoder.matches(usuario.getSenha(), senha);
      return validar;
+    }
+
+    public Token gerarToken(@Valid UsuarioDto usuario) {
+        Usuario user = repository.findByNomeOrEmail(usuario.getNome(), usuario.getEmail());
+        if(user != null){
+            boolean validar = passwordEncoder.matches(usuario.getSenha(), user.getSenha());
+            if(validar){
+                return new Token(TokenUtil.criarToken(user));
+            }
+        }
+        return null;
     }
 
     
