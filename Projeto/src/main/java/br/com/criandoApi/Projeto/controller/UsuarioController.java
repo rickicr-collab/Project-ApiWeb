@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.criandoApi.Projeto.dto.UsuarioDto;
 import br.com.criandoApi.Projeto.model.Usuario;
+import br.com.criandoApi.Projeto.security.Token;
 import br.com.criandoApi.Projeto.service.UsuarioService;
 import jakarta.validation.Valid;
 
@@ -59,10 +61,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> validarSenha(@Valid @RequestBody Usuario usuario){
-        Boolean login = usuarioService.validarSenha(usuario);
-        if(!login){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<Token> logar(@Valid @RequestBody UsuarioDto usuario){
+        Token token = usuarioService.gerarToken(usuario);
+        if(token != null){
+            return ResponseEntity.ok().body(token);
         }
         return ResponseEntity.status(200).build();
     }
