@@ -2,6 +2,11 @@ package br.com.criandoApi.Projeto.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,8 +21,9 @@ import jakarta.validation.Valid;
 @Service
 public class UsuarioService {
 
-    private IUsuario repository;
-    private PasswordEncoder passwordEncoder;
+    private final IUsuario repository;
+    private final PasswordEncoder passwordEncoder;
+    private final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
    
     
 
@@ -27,25 +33,26 @@ public class UsuarioService {
     }
 
     public List<Usuario> listarUsuarios(){
-        List<Usuario> usuarios = repository.findAll();
-        return usuarios;
+        logger.info("Usuario: " + getLogado() + " - Acessando Lista de Usuario!");
+        return repository.findAll();
     }
 
     public Usuario criarUsuario(Usuario usuario){
+        logger.info("Usuario: " + getLogado() + " - Criando novo Usuário!");
         String encoder = this.passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(encoder);
-        Usuario novoUsuario = repository.save(usuario);
-        return novoUsuario;
+        return repository.save(usuario);
     }
 
     public Usuario atualizarUsuario(Usuario usuario){
+        logger.info("Usuario: " + getLogado() + " - Atualizando Usuário!");
         String encoderUpdate = this.passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(encoderUpdate);
-        Usuario atualizarUsuario = repository.save(usuario);
-        return atualizarUsuario;
+        return repository.save(usuario);
     }
 
-    public Boolean excluirUsuario(Integer id){
+    public boolean excluirUsuario(Integer id){
+        logger.info("Usuario: " + getLogado() + " - Excluindo Usuário!");
         repository.deleteById(id);
         return true;
     }
@@ -67,6 +74,12 @@ public class UsuarioService {
         return null;
     }
 
-    
+    private String getLogado(){
+        Authentication userLogado = SecurityContextHolder.getContext().getAuthentication();
+        if(userLogado instanceof AnonymousAuthenticationToken){
+            return userLogado.getName();
+        }
+        return "RicDeveloper";
+    }
 
 }
